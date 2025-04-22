@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma-client"
 }
 
 datasource db {
@@ -7,10 +8,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
-  lastName String
-  firstName String
-  email String @unique
-  password String
+model cnsl_group {
+  id              String    @id @default(cuid()) @db.VarChar(30)
+  name            String?
+  description     String?
+  note            String?
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  deletedAt       DateTime? @db.Timestamptz(6)
+  visiblePolicies policy[]  @relation("PolicyVisibleGroups")
+  members         user[]    @relation("UserGroups")
+}
+
+model user {
+  id                String       @id @default(cuid()) @db.VarChar(30)
+  email             String       @unique
+  firstName         String
+  lastName          String
+  avatar            String?
+  title             String?
+  department        String?
+  createdAt         DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  deletedAt         DateTime?    @db.Timestamptz(6)
+  ownedApps         app[]        @relation("AppOwner")
+  reviewingPolicies policy[]     @relation("PolicyReviewers")
+  visiblePolicies   policy[]     @relation("PolicyVisibleUsers")
+  groups            cnsl_group[] @relation("UserGroups")
+}
+
+model app {
+  id        String    @id @default(cuid()) @db.VarChar(30)
+  name      String
+  url       String?
+  logo      String?
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  deletedAt DateTime? @db.Timestamptz(6)
+  ownerId   String?   @db.VarChar(30)
+  owner     user?     @relation("AppOwner", fields: [ownerId], references: [id])
+  policies  policy[]
+}
+
+model policy {
+  id                    String             @id @default(cuid()) @db.VarChar(30)
+  name                  String?
+  description           String?
+  appId                 String             @db.VarChar(30)
+  visibleToEveryone     Boolean            @default(false)
+  accessDurationType    AccessDurationType
+  accessDurationDays    Int?
+  useAppOwnerAsReviewer Boolean            @default(false)
+  approvalSteps         Json               @default("[]")
+  revocationSteps       Json               @default("[]")
+  createdAt             DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  deletedAt             DateTime?          @db.Timestamptz(6)
+  app                   app                @relation(fields: [appId], references: [id])
+  reviewers             user[]             @relation("PolicyReviewers")
+  visibleGroups         cnsl_group[]       @relation("PolicyVisibleGroups")
+  visibleUsers          user[]             @relation("PolicyVisibleUsers")
+}
+
+enum AccessDurationType {
+  FIXED
+  INDEFINITE
+  USER_REQUESTED
 }

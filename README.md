@@ -1,84 +1,140 @@
-# Boilerplate for express, postgresql, prisma and typescript
+# Console Backend (`console-backend`)
 
-This boilerplate follows clean architecture with SOLID principles. This sample define a simple user schema and handle two endpoints that allows users to create new accounts and login by them. There is also a middleware to validate JWT tokens that are provided by clients with `Bearer` authorization header.
+This project provides the backend API for the Console policy management application.
 
-## Technologies
+## Prerequisites
 
-- Environment: Nodejs
-- Language: Typescript
-- Framework: Expressjs
-- ORM: Prisma
-- Database: Postgresql
-- Authentication: Basic, JWT
-- Inversion Of Control (D in SOLID): Awillix
-- Password hash library: bcryptjs
+Before you begin, ensure you have the following installed:
 
-## Prequisite
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), or [pnpm](https://pnpm.io/)
+- [Git](https://git-scm.com/)
+- **Database:** You need a running PostgreSQL instance. You have two options:
+  - **Option A: Docker (Recommended):** Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/). The project includes a `docker-compose.yml` file to easily spin up a PostgreSQL container.
+  - **Option B: Local/Remote Instance:** Have connection details for an existing PostgreSQL server.
 
-- Create the `.env` file by copying the `.env.example` file
-- Database:
+## Getting Started
 
-  - The easy way to have a Postgresql server is using docker or you can use Postgreql cloud
-  - Once you have the database connection URL, replace the sample one in the `.env` file by yours
+1.  **Clone the Repository:**
 
-- Run Postgres database at port 5432
+    ```bash
+    # If you haven't already cloned the main project
+    git clone <repository-url>
+    cd <repository-folder>/console-backend
+    ```
 
-```bash
-docker run -e POSTGRES_PASSWORD=secrect -e POSTGRES_USER=postgres -p 5432:5432 postgres:15-alpine
-```
+2.  **Install Dependencies:**
 
-- Create `.env` file from `.env.template` and update the `DATABASE_URL`:
+    ```bash
+    npm install
+    # or yarn install
+    # or pnpm install
+    ```
 
-```bash
-cp .env.template .env
-```
+3.  **Environment Variables:**
 
-- Edit file `.env`
+    - Create a `.env` file in the `console-backend` root directory by copying `.env.example`.
+    - Populate the `.env` file. **Crucially, the database details here must match the database you intend to use (either the Docker container or your separate instance).**
 
-```
-DATABASE_URL="postgresql://postgres:secrect@localhost:5432/prisma-posgres-boilerplate?schema=public"
-```
+      ```dotenv
+      # Example PostgreSQL Connection URL for Docker Compose default settings:
+      DATABASE_URL="postgresql://postgres:password@localhost:5433/console_db?schema=public"
 
-- Install dependencies
+      # Example Server Port:
+      PORT=3000
+      ```
 
-```bash
-npm ci
-```
+    - The `docker-compose.yml` file uses these environment variables if they exist, otherwise it falls back to defaults (`postgres`/`password`/`console_db` on host port `5433`).
+    - **Admin User:** The seed script (`prisma/seed.ts`) defines credentials for an admin user (`ADMIN_USER_ID_SEED`, `ADMIN_EMAIL`). The policy controller (`src/controllers/policy.controller.ts`) uses a corresponding `ADMIN_USER_ID` constant to grant full visibility. Ensure these IDs/emails match, and preferably manage the controller's `ADMIN_USER_ID` via an environment variable as well.
 
-- Initialize database schema
+4.  **Start the Database (if using Docker):**
 
-```bash
-npx prisma migrate dev --name "init" --preview-feature
-```
+    - If you chose **Option A (Docker)** in Prerequisites, start the PostgreSQL container:
 
-## Docker build
+      ```bash
+      docker compose up -d
+      ```
 
-```bash
-docker build -t app-name .
-```
+      The `-d` flag runs the container in the background. The database will be available on the host port specified in `docker-compose.yml` (defaulting to `5433`).
 
-## NPM scripts
+    - If you chose **Option B (Local/Remote Instance)**, ensure your PostgreSQL server is running.
 
-1. Run dev
+5.  **Database Setup & Seeding:**
+
+    - Apply the database schema using Prisma:
+
+      ```bash
+      npx prisma db push
+      ```
+
+      This synchronizes your database schema with `prisma/schema.prisma`.
+
+    - Populate the database with initial data:
+
+      ```bash
+      npx prisma db seed
+      ```
+
+## Running the Development Server
+
+To start the backend server with hot-reloading for development:
 
 ```bash
 npm run dev
 ```
 
-2. Linting
+The server will start, typically listening on `http://localhost:3000` (or the `PORT` specified in your `.env` file).
 
-```bash
-npm run lint
-```
+## Available Scripts
 
-3. Build
+In the `package.json`, you will find several scripts:
 
-```bash
-npm run build
-```
+- `npm run dev`: Starts the development server using `nodemon` and `ts-node`.
+- `npm run build`: Compiles the TypeScript code to JavaScript in the `dist` directory.
+- `npm start`: Starts the production server from the compiled code in `dist`.
+- `npx prisma ...`: Various Prisma commands for database migrations, schema pushing, studio, etc.
+- `npm run seed`: Executes the database seed script (`prisma/seed.ts`).
 
-4. Run production
+## Project Structure
 
-```bash
-npm run start
-```
+- `prisma/`: Contains the Prisma schema (`schema.prisma`) and seeding script (`seed.ts`).
+- `src/`: Contains the application source code.
+  - `controllers/`: Request handlers for API routes.
+  - `routes/`: Defines API endpoints and maps them to controllers.
+  - `utils/`: Utility functions (e.g., Prisma client instance).
+  - `generated/`: Contains the auto-generated Prisma client.
+  - `app.ts`: Express application setup (middleware, routes).
+  - `index.ts`: Server entry point.
+- `.env`: Environment variables (ignored by Git).
+- `tsconfig.json`: TypeScript configuration.
+- `package.json`: Project dependencies and scripts.
+
+## API Endpoints Overview
+
+All endpoints are prefixed with `/api`.
+
+- **Policies (`/policies`)**
+  - `GET /`: List policies (with user-based visibility).
+  - `POST /`: Create a new policy.
+  - `GET /:id`: Get a specific policy.
+  - `PUT /:id`: Update a specific policy.
+  - `DELETE /:id`: Soft delete a specific policy.
+- **Apps (`/apps`)**
+  - `GET /`: List all apps.
+  - `GET /:id`: Get a specific app.
+- **Users (`/users`)**
+  - `GET /`: List all users.
+  - `GET /:id`: Get a specific user.
+- **Groups (`/groups`)**
+  - `GET /`: List all groups.
+  - `GET /:id`: Get a specific group.
+
+Refer to `backend.md` for more detailed data model and API descriptions.
+
+## Technology Stack
+
+- Node.js
+- Express.js
+- TypeScript
+- Prisma ORM
+- PostgreSQL

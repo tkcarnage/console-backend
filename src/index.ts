@@ -1,20 +1,7 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import authRouter from './modules/auth/application/router';
-import userRouter from './modules/user/application/router';
-import container from './IoC/container';
+import app from "./app";
 
-const API_PREFIX = '/api';
-const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(API_PREFIX, authRouter(container.cradle));
-app.use(API_PREFIX, userRouter(container.cradle));
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Application started at port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

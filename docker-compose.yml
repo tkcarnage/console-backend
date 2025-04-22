@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:15 # You can specify a different version if needed
+    container_name: console-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres} # Use env var or default
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password} # Use env var or default
+      POSTGRES_DB: ${DATABASE_NAME:-console_db} # Use env var or default
+    ports:
+      - "${DATABASE_PORT:-5433}:5432" # Map host port 5433 (or env var) to container port 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
