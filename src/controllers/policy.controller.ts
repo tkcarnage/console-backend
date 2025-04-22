@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import prisma from "../utils/prisma";
 import { Prisma, AccessDurationType } from "../generated/prisma-client";
 
-// Define your Admin User ID (replace with actual ID or env variable)
-const ADMIN_USER_ID = "your-admin-user-id-here";
+// Get admin user ID from environment variable
+const ADMIN_USER_ID = process.env.ADMIN_USER_ID;
 
 /**
  * @description Get a list of all policies
