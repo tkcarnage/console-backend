@@ -72,6 +72,9 @@ model policy {
 }
 
 enum AccessDurationType {
-  FIXED
+  FIXED_WEEK
+  FIXED_MONTH
+  FIXED_YEAR
+  FIXED_CUSTOM
   INDEFINITE
 }

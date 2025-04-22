@@ -1,6 +1,40 @@
 import { Request, Response } from "express";
+import { Prisma } from "../generated/prisma-client";
 import prisma from "../utils/prisma";
-import { Prisma, AccessDurationType } from "../generated/prisma-client";
+
+// Define the access duration type as an enum
+enum AccessDurationType {
+  FIXED_WEEK = "FIXED_WEEK",
+  FIXED_MONTH = "FIXED_MONTH",
+  FIXED_YEAR = "FIXED_YEAR",
+  FIXED_CUSTOM = "FIXED_CUSTOM",
+  INDEFINITE = "INDEFINITE",
+}
+
+// Define the policy input types using Prisma types
+type PolicyWhereInput = Prisma.policyWhereInput;
+type PolicyUpdateInput = Prisma.policyUpdateInput;
+type InputJsonValue = Prisma.InputJsonValue;
+
+const getAccessDurationDays = (
+  durationType: AccessDurationType,
+  customDays?: number
+): number | undefined => {
+  switch (durationType) {
+    case AccessDurationType.FIXED_WEEK:
+      return 7;
+    case AccessDurationType.FIXED_MONTH:
+      return 30;
+    case AccessDurationType.FIXED_YEAR:
+      return 365;
+    case AccessDurationType.FIXED_CUSTOM:
+      return customDays;
+    case AccessDurationType.INDEFINITE:
+      return undefined;
+    default:
+      return undefined;
+  }
+};
 
 // Get admin user ID from environment variable
 const ADMIN_USER_ID = process.env.ADMIN_USER_ID;
@@ -130,68 +164,58 @@ export const createPolicy = async (req: Request, res: Response) => {
     });
   }
 
+  const calculatedDurationDays = getAccessDurationDays(
+    accessDurationType as AccessDurationType,
+    accessDurationDays
+  );
+
   if (
-    accessDurationType === AccessDurationType.FIXED &&
+    accessDurationType === AccessDurationType.FIXED_CUSTOM &&
     (typeof accessDurationDays !== "number" || accessDurationDays <= 0)
   ) {
     return res.status(400).json({
       message:
-        "accessDurationDays (positive number) is required when accessDurationType is FIXED.",
+        "accessDurationDays (positive number) is required when accessDurationType is FIXED_CUSTOM.",
     });
   }
 
-  const data: Prisma.policyCreateInput = {
-    name,
-    description,
-    app: { connect: { id: appId } },
-    visibleToEveryone,
-    accessDurationType,
-    accessDurationDays:
-      accessDurationType === AccessDurationType.FIXED
-        ? accessDurationDays
-        : undefined,
-    useAppOwnerAsReviewer,
-    approvalSteps: approvalSteps as Prisma.InputJsonValue,
-    provisioningSteps: provisioningSteps as Prisma.InputJsonValue,
-    revocationSteps: revocationSteps as Prisma.InputJsonValue,
-    visibleUsers:
-      visibleUserIds && visibleUserIds.length > 0
-        ? { connect: visibleUserIds.map((id: string) => ({ id })) }
-        : undefined,
-    visibleGroups:
-      visibleGroupIds && visibleGroupIds.length > 0
-        ? { connect: visibleGroupIds.map((id: string) => ({ id })) }
-        : undefined,
-    reviewers:
-      reviewerIds && reviewerIds.length > 0
-        ? { connect: reviewerIds.map((id: string) => ({ id })) }
-        : undefined,
-  };
-
   try {
-    const newPolicy = await prisma.policy.create({
-      data,
-      include: {
-        app: { select: { id: true, name: true, logo: true } },
-        visibleUsers: {
-          select: { id: true, email: true, firstName: true, lastName: true },
+    const policy = await prisma.policy.create({
+      data: {
+        name,
+        description,
+        app: {
+          connect: { id: appId },
         },
-        visibleGroups: { select: { id: true, name: true } },
-        reviewers: {
-          select: { id: true, email: true, firstName: true, lastName: true },
-        },
+        visibleToEveryone,
+        accessDurationType: accessDurationType as AccessDurationType,
+        accessDurationDays: calculatedDurationDays,
+        useAppOwnerAsReviewer,
+        approvalSteps,
+        revocationSteps,
+        provisioningSteps,
+        ...(reviewerIds && {
+          reviewers: {
+            connect: reviewerIds.map((id: string) => ({ id })),
+          },
+        }),
+        ...(visibleUserIds && {
+          visibleUsers: {
+            connect: visibleUserIds.map((id: string) => ({ id })),
+          },
+        }),
+        ...(visibleGroupIds && {
+          visibleGroups: {
+            connect: visibleGroupIds.map((id: string) => ({ id })),
+          },
+        }),
       },
     });
-    res.status(201).json(newPolicy);
+
+    return res.status(201).json(policy);
   } catch (error) {
-    console.error("Failed to create policy:", error);
-    if (error instanceof Error) {
-      res
-        .status(500)
-        .json({ message: "Failed to create policy", error: error.message });
-    } else {
-      res.status(500).json({ message: "An unknown error occurred" });
-    }
+    console.error("Error creating policy:", error);
+    return res.status(500).json({ message: "Error creating policy" });
   }
 };
 
@@ -288,17 +312,22 @@ export const updatePolicy = async (req: Request, res: Response) => {
 
     const finalAccessType =
       accessDurationType || existingPolicy.accessDurationType;
-    const finalAccessDays =
+
+    const calculatedDurationDays = getAccessDurationDays(
+      finalAccessType as AccessDurationType,
       accessDurationDays !== undefined
         ? accessDurationDays
-        : existingPolicy.accessDurationDays;
+        : existingPolicy.accessDurationDays
+    );
+
     if (
-      finalAccessType === AccessDurationType.FIXED &&
-      (typeof finalAccessDays !== "number" || finalAccessDays <= 0)
+      finalAccessType === AccessDurationType.FIXED_CUSTOM &&
+      (typeof calculatedDurationDays !== "number" ||
+        calculatedDurationDays <= 0)
     ) {
       return res.status(400).json({
         message:
-          "accessDurationDays (positive number) is required when accessDurationType is FIXED.",
+          "accessDurationDays (positive number) is required when accessDurationType is FIXED_CUSTOM.",
       });
     }
 
@@ -309,22 +338,10 @@ export const updatePolicy = async (req: Request, res: Response) => {
     if (appId) updateData.app = { connect: { id: appId } };
     if (visibleToEveryone !== undefined)
       updateData.visibleToEveryone = visibleToEveryone;
-    if (accessDurationType) updateData.accessDurationType = accessDurationType;
-    if (accessDurationType === AccessDurationType.FIXED && accessDurationDays) {
-      updateData.accessDurationDays = accessDurationDays;
-    } else if (
-      accessDurationType &&
-      finalAccessType !== AccessDurationType.FIXED
-    ) {
-      updateData.accessDurationDays = null;
-    } else if (
-      !accessDurationType &&
-      finalAccessType !== AccessDurationType.FIXED &&
-      accessDurationDays !== undefined
-    ) {
-      updateData.accessDurationDays = null;
+    if (accessDurationType) {
+      updateData.accessDurationType = accessDurationType;
+      updateData.accessDurationDays = calculatedDurationDays;
     }
-
     if (useAppOwnerAsReviewer !== undefined)
       updateData.useAppOwnerAsReviewer = useAppOwnerAsReviewer;
     if (approvalSteps !== undefined)

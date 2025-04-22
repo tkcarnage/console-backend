@@ -193,7 +193,10 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.AccessDurationType = exports.$Enums.AccessDurationType = {
-  FIXED: 'FIXED',
+  FIXED_WEEK: 'FIXED_WEEK',
+  FIXED_MONTH: 'FIXED_MONTH',
+  FIXED_YEAR: 'FIXED_YEAR',
+  FIXED_CUSTOM: 'FIXED_CUSTOM',
   INDEFINITE: 'INDEFINITE'
 };
 
