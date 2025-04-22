@@ -109,6 +109,7 @@ export const createPolicy = async (req: Request, res: Response) => {
     useAppOwnerAsReviewer = false,
     approvalSteps = [],
     revocationSteps = [],
+    provisioningSteps = [],
   } = req.body;
 
   if (!appId || !accessDurationType) {
@@ -151,6 +152,7 @@ export const createPolicy = async (req: Request, res: Response) => {
         : undefined,
     useAppOwnerAsReviewer,
     approvalSteps: approvalSteps as Prisma.InputJsonValue,
+    provisioningSteps: provisioningSteps as Prisma.InputJsonValue,
     revocationSteps: revocationSteps as Prisma.InputJsonValue,
     visibleUsers:
       visibleUserIds && visibleUserIds.length > 0
@@ -259,6 +261,7 @@ export const updatePolicy = async (req: Request, res: Response) => {
     useAppOwnerAsReviewer,
     approvalSteps,
     revocationSteps,
+    provisioningSteps,
   } = req.body;
 
   try {
@@ -326,6 +329,8 @@ export const updatePolicy = async (req: Request, res: Response) => {
       updateData.useAppOwnerAsReviewer = useAppOwnerAsReviewer;
     if (approvalSteps !== undefined)
       updateData.approvalSteps = approvalSteps as Prisma.InputJsonValue;
+    if (provisioningSteps !== undefined)
+      updateData.provisioningSteps = provisioningSteps as Prisma.InputJsonValue;
     if (revocationSteps !== undefined)
       updateData.revocationSteps = revocationSteps as Prisma.InputJsonValue;
 
