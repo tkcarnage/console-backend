@@ -161,6 +161,7 @@ exports.Prisma.PolicyScalarFieldEnum = {
   accessDurationDays: 'accessDurationDays',
   useAppOwnerAsReviewer: 'useAppOwnerAsReviewer',
   approvalSteps: 'approvalSteps',
+  provisioningSteps: 'provisioningSteps',
   revocationSteps: 'revocationSteps',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

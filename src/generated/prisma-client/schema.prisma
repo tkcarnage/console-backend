@@ -60,6 +60,7 @@ model policy {
   accessDurationDays    Int?
   useAppOwnerAsReviewer Boolean            @default(false)
   approvalSteps         Json               @default("[]")
+  provisioningSteps     Json               @default("[]")
   revocationSteps       Json               @default("[]")
   createdAt             DateTime           @default(now()) @db.Timestamptz(6)
   updatedAt             DateTime           @default(now()) @updatedAt @db.Timestamptz(6)

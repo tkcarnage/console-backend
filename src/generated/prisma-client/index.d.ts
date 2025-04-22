@@ -4883,6 +4883,7 @@ export namespace Prisma {
     accessDurationDays: number
     useAppOwnerAsReviewer: number
     approvalSteps: number
+    provisioningSteps: number
     revocationSteps: number
     createdAt: number
     updatedAt: number
@@ -4937,6 +4938,7 @@ export namespace Prisma {
     accessDurationDays?: true
     useAppOwnerAsReviewer?: true
     approvalSteps?: true
+    provisioningSteps?: true
     revocationSteps?: true
     createdAt?: true
     updatedAt?: true
@@ -5040,6 +5042,7 @@ export namespace Prisma {
     accessDurationDays: number | null
     useAppOwnerAsReviewer: boolean
     approvalSteps: JsonValue
+    provisioningSteps: JsonValue
     revocationSteps: JsonValue
     createdAt: Date
     updatedAt: Date
@@ -5075,6 +5078,7 @@ export namespace Prisma {
     accessDurationDays?: boolean
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: boolean
+    provisioningSteps?: boolean
     revocationSteps?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5096,6 +5100,7 @@ export namespace Prisma {
     accessDurationDays?: boolean
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: boolean
+    provisioningSteps?: boolean
     revocationSteps?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5113,6 +5118,7 @@ export namespace Prisma {
     accessDurationDays?: boolean
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: boolean
+    provisioningSteps?: boolean
     revocationSteps?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5130,13 +5136,14 @@ export namespace Prisma {
     accessDurationDays?: boolean
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: boolean
+    provisioningSteps?: boolean
     revocationSteps?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type policyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "appId" | "visibleToEveryone" | "accessDurationType" | "accessDurationDays" | "useAppOwnerAsReviewer" | "approvalSteps" | "revocationSteps" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["policy"]>
+  export type policyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "appId" | "visibleToEveryone" | "accessDurationType" | "accessDurationDays" | "useAppOwnerAsReviewer" | "approvalSteps" | "provisioningSteps" | "revocationSteps" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["policy"]>
   export type policyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     app?: boolean | appDefaultArgs<ExtArgs>
     reviewers?: boolean | policy$reviewersArgs<ExtArgs>
@@ -5169,6 +5176,7 @@ export namespace Prisma {
       accessDurationDays: number | null
       useAppOwnerAsReviewer: boolean
       approvalSteps: Prisma.JsonValue
+      provisioningSteps: Prisma.JsonValue
       revocationSteps: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
@@ -5609,6 +5617,7 @@ export namespace Prisma {
     readonly accessDurationDays: FieldRef<"policy", 'Int'>
     readonly useAppOwnerAsReviewer: FieldRef<"policy", 'Boolean'>
     readonly approvalSteps: FieldRef<"policy", 'Json'>
+    readonly provisioningSteps: FieldRef<"policy", 'Json'>
     readonly revocationSteps: FieldRef<"policy", 'Json'>
     readonly createdAt: FieldRef<"policy", 'DateTime'>
     readonly updatedAt: FieldRef<"policy", 'DateTime'>
@@ -6166,6 +6175,7 @@ export namespace Prisma {
     accessDurationDays: 'accessDurationDays',
     useAppOwnerAsReviewer: 'useAppOwnerAsReviewer',
     approvalSteps: 'approvalSteps',
+    provisioningSteps: 'provisioningSteps',
     revocationSteps: 'revocationSteps',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -6557,6 +6567,7 @@ export namespace Prisma {
     accessDurationDays?: IntNullableFilter<"policy"> | number | null
     useAppOwnerAsReviewer?: BoolFilter<"policy"> | boolean
     approvalSteps?: JsonFilter<"policy">
+    provisioningSteps?: JsonFilter<"policy">
     revocationSteps?: JsonFilter<"policy">
     createdAt?: DateTimeFilter<"policy"> | Date | string
     updatedAt?: DateTimeFilter<"policy"> | Date | string
@@ -6577,6 +6588,7 @@ export namespace Prisma {
     accessDurationDays?: SortOrderInput | SortOrder
     useAppOwnerAsReviewer?: SortOrder
     approvalSteps?: SortOrder
+    provisioningSteps?: SortOrder
     revocationSteps?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6600,6 +6612,7 @@ export namespace Prisma {
     accessDurationDays?: IntNullableFilter<"policy"> | number | null
     useAppOwnerAsReviewer?: BoolFilter<"policy"> | boolean
     approvalSteps?: JsonFilter<"policy">
+    provisioningSteps?: JsonFilter<"policy">
     revocationSteps?: JsonFilter<"policy">
     createdAt?: DateTimeFilter<"policy"> | Date | string
     updatedAt?: DateTimeFilter<"policy"> | Date | string
@@ -6620,6 +6633,7 @@ export namespace Prisma {
     accessDurationDays?: SortOrderInput | SortOrder
     useAppOwnerAsReviewer?: SortOrder
     approvalSteps?: SortOrder
+    provisioningSteps?: SortOrder
     revocationSteps?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6644,6 +6658,7 @@ export namespace Prisma {
     accessDurationDays?: IntNullableWithAggregatesFilter<"policy"> | number | null
     useAppOwnerAsReviewer?: BoolWithAggregatesFilter<"policy"> | boolean
     approvalSteps?: JsonWithAggregatesFilter<"policy">
+    provisioningSteps?: JsonWithAggregatesFilter<"policy">
     revocationSteps?: JsonWithAggregatesFilter<"policy">
     createdAt?: DateTimeWithAggregatesFilter<"policy"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"policy"> | Date | string
@@ -6924,6 +6939,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6944,6 +6960,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6962,6 +6979,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6982,6 +7000,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7001,6 +7020,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -7016,6 +7036,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7032,6 +7053,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7367,6 +7389,7 @@ export namespace Prisma {
     accessDurationDays?: SortOrder
     useAppOwnerAsReviewer?: SortOrder
     approvalSteps?: SortOrder
+    provisioningSteps?: SortOrder
     revocationSteps?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8142,6 +8165,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8161,6 +8185,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8240,6 +8265,7 @@ export namespace Prisma {
     accessDurationDays?: IntNullableFilter<"policy"> | number | null
     useAppOwnerAsReviewer?: BoolFilter<"policy"> | boolean
     approvalSteps?: JsonFilter<"policy">
+    provisioningSteps?: JsonFilter<"policy">
     revocationSteps?: JsonFilter<"policy">
     createdAt?: DateTimeFilter<"policy"> | Date | string
     updatedAt?: DateTimeFilter<"policy"> | Date | string
@@ -8319,6 +8345,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8338,6 +8365,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8360,6 +8388,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8379,6 +8408,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8556,6 +8586,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8574,6 +8605,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8870,6 +8902,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8889,6 +8922,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8907,6 +8941,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9009,6 +9044,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9028,6 +9064,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9046,6 +9083,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9061,6 +9099,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9080,6 +9119,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9098,6 +9138,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9145,6 +9186,7 @@ export namespace Prisma {
     accessDurationDays?: number | null
     useAppOwnerAsReviewer?: boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9160,6 +9202,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9178,6 +9221,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9196,6 +9240,7 @@ export namespace Prisma {
     accessDurationDays?: NullableIntFieldUpdateOperationsInput | number | null
     useAppOwnerAsReviewer?: BoolFieldUpdateOperationsInput | boolean
     approvalSteps?: JsonNullValueInput | InputJsonValue
+    provisioningSteps?: JsonNullValueInput | InputJsonValue
     revocationSteps?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
