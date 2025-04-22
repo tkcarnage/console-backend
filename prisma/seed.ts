@@ -521,7 +521,8 @@ async function main() {
       app: { connect: { id: "clq1234567893" } }, // Connect to GitHub app
       visibleToEveryone: false,
       visibleGroups: { connect: { id: "clq3456789101" } }, // Visible to Engineering Team
-      accessDurationType: AccessDurationType.INDEFINITE,
+      accessDurationType: AccessDurationType.FIXED_YEAR,
+      accessDurationDays: 365,
       useAppOwnerAsReviewer: true, // Reviewed by App Owner (Sarah Johnson)
       approvalSteps: [
         {
@@ -544,7 +545,8 @@ async function main() {
       description: "Grants basic Slack access to all employees.",
       app: { connect: { id: "clq1234567891" } }, // Connect to Slack app
       visibleToEveryone: true,
-      accessDurationType: AccessDurationType.INDEFINITE,
+      accessDurationType: AccessDurationType.FIXED_MONTH,
+      accessDurationDays: 30,
       useAppOwnerAsReviewer: false,
       reviewers: {
         // Reviewed by Michael Chen and Sophia Garcia
@@ -557,6 +559,41 @@ async function main() {
     },
   });
   console.log(`  Upserted policy: ${policy2.name} (${policy2.id})`);
+
+  // Added Policy 3: Confluence access with custom duration
+  const policy3 = await prisma.policy.upsert({
+    where: { id: "pol_confluence_custom" },
+    update: {},
+    create: {
+      id: "pol_confluence_custom",
+      name: "Confluence Trial Access",
+      description: "Grants trial access to Confluence for 15 days.",
+      app: { connect: { id: "clq1234567895" } }, // Connect to Confluence app
+      visibleToEveryone: true,
+      accessDurationType: AccessDurationType.FIXED_CUSTOM,
+      accessDurationDays: 15, // Custom 15 days duration
+      useAppOwnerAsReviewer: false,
+      approvalSteps: [{ type: "confluence_add_user", role: "viewer" }],
+    },
+  });
+  console.log(`  Upserted policy: ${policy3.name} (${policy3.id})`);
+
+  // Added Policy 4: Indefinite access example
+  const policy4 = await prisma.policy.upsert({
+    where: { id: "pol_datadog_indefinite" },
+    update: {},
+    create: {
+      id: "pol_datadog_indefinite",
+      name: "Datadog Monitoring Access",
+      description: "Grants permanent access to Datadog monitoring.",
+      app: { connect: { id: "clq1234567897" } }, // Connect to Datadog app
+      visibleToEveryone: false,
+      accessDurationType: AccessDurationType.INDEFINITE,
+      useAppOwnerAsReviewer: true,
+      approvalSteps: [{ type: "datadog_add_user", role: "viewer" }],
+    },
+  });
+  console.log(`  Upserted policy: ${policy4.name} (${policy4.id})`);
 
   console.log(`Seeding finished.`);
 }
