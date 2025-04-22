@@ -40,8 +40,7 @@ export type policy = $Result.DefaultSelection<Prisma.$policyPayload>
 export namespace $Enums {
   export const AccessDurationType: {
   FIXED: 'FIXED',
-  INDEFINITE: 'INDEFINITE',
-  USER_REQUESTED: 'USER_REQUESTED'
+  INDEFINITE: 'INDEFINITE'
 };
 
 export type AccessDurationType = (typeof AccessDurationType)[keyof typeof AccessDurationType]

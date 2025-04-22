@@ -5,10 +5,8 @@ import {
 
 const prisma = new PrismaClient();
 
-// ---> Add Admin User Definition <---
-const ADMIN_USER_ID_SEED = "admin-user-placeholder-id"; // <<< REPLACE THIS WITH A SECURE ID
-const ADMIN_EMAIL = "admin@example.com"; // <<< REPLACE THIS WITH A REAL EMAIL
-// ---> End Admin User Definition <---
+const ADMIN_USER_ID_SEED = "admin-user-placeholder-id";
+const ADMIN_EMAIL = "admin@example.com";
 
 // Provided data
 const appData = [
@@ -383,31 +381,6 @@ const groupData = [
 async function main() {
   console.log(`Start seeding ...`);
 
-  // ---> Seed Admin User First <---
-  console.log("Seeding admin user...");
-  const adminUser = await prisma.user.upsert({
-    where: { id: ADMIN_USER_ID_SEED },
-    update: {
-      email: ADMIN_EMAIL,
-      firstName: "Admin",
-      lastName: "User",
-      groups: {
-        connect: groupData.map((group) => ({ id: group.id })),
-      },
-    },
-    create: {
-      id: ADMIN_USER_ID_SEED,
-      email: ADMIN_EMAIL,
-      firstName: "Admin",
-      lastName: "User",
-      groups: {
-        connect: groupData.map((group) => ({ id: group.id })),
-      },
-    },
-  });
-  console.log(`  Upserted admin user: ${adminUser.email} (${adminUser.id})`);
-  // ---> End Seed Admin User <---
-
   // Seed Groups first (no dependencies)
   console.log("Seeding groups...");
   for (const group of groupData) {
@@ -433,6 +406,30 @@ async function main() {
     });
     console.log(`  Upserted group: ${result.name} (${result.id})`);
   }
+
+  console.log("Seeding admin user...");
+  const adminUser = await prisma.user.upsert({
+    where: { id: ADMIN_USER_ID_SEED },
+    update: {
+      email: ADMIN_EMAIL,
+      firstName: "Admin",
+      lastName: "User",
+      groups: {
+        connect: groupData.map((group) => ({ id: group.id })),
+      },
+    },
+    create: {
+      id: ADMIN_USER_ID_SEED,
+      email: ADMIN_EMAIL,
+      firstName: "Admin",
+      lastName: "User",
+      groups: {
+        connect: groupData.map((group) => ({ id: group.id })),
+      },
+    },
+  });
+  console.log(`  Upserted admin user: ${adminUser.email} (${adminUser.id})`);
+  // ---> End Seed Admin User <---
 
   // Seed Users (depends on groups for relations later)
   console.log("Seeding users...");

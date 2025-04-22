@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 // Define routes
-router.get("/", listPolicies); // GET /api/policies
+router.get("/", listPolicies);
 
 router.post("/", function (req: Request, res: Response) {
   createPolicy(req, res);

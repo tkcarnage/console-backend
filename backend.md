@@ -113,7 +113,6 @@ Defines the type of access duration for a policy.
 
 - `FIXED`: Access lasts for `accessDurationDays`.
 - `INDEFINITE`: Access does not expire automatically.
-- `USER_REQUESTED`: Access duration determined by user request (Note: `minDays`, `maxDays`, `requireReason` fields were removed).
 
 ## API Endpoints (`src/routes/`, `src/controllers/`)
 

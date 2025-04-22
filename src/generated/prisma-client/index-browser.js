@@ -193,8 +193,7 @@ exports.Prisma.JsonNullValueFilter = {
 };
 exports.AccessDurationType = exports.$Enums.AccessDurationType = {
   FIXED: 'FIXED',
-  INDEFINITE: 'INDEFINITE',
-  USER_REQUESTED: 'USER_REQUESTED'
+  INDEFINITE: 'INDEFINITE'
 };
 
 exports.Prisma.ModelName = {
