@@ -524,11 +524,41 @@ async function main() {
       accessDurationType: AccessDurationType.FIXED_YEAR,
       accessDurationDays: 365,
       useAppOwnerAsReviewer: true, // Reviewed by App Owner (Sarah Johnson)
+      provisioningSteps: [
+        {
+          id: "prov_step_1",
+          type: "api_call",
+          target: "add_team_member",
+          provider: "github",
+          description: "Add team member to GitHub organization",
+          parameters: {
+            organization: "your-org-name",
+            team_slug: "engineering",
+            role: "member",
+            permission: "write",
+          },
+          rollbackAction: "remove_team_member",
+        },
+      ],
       approvalSteps: [
         {
-          type: "github_add_to_team",
-          team_slug: "engineering",
-          role: "member",
+          order: 1,
+          type: "approval",
+          approverType: "app_owner",
+          requiredApprovals: 1,
+        },
+      ],
+      revocationSteps: [
+        {
+          id: "rev_step_1",
+          type: "api_call",
+          target: "remove_team_member",
+          provider: "github",
+          description: "Remove team member from GitHub organization",
+          parameters: {
+            organization: "your-org-name",
+            team_slug: "engineering",
+          },
         },
       ],
     },
@@ -549,13 +579,47 @@ async function main() {
       accessDurationDays: 30,
       useAppOwnerAsReviewer: false,
       reviewers: {
-        // Reviewed by Michael Chen and Sophia Garcia
         connect: [
           { email: "michael.chen@company.com" },
           { email: "sophia.garcia@company.com" },
         ],
       },
-      approvalSteps: [{ type: "slack_invite_user", role: "member" }],
+      provisioningSteps: [
+        {
+          id: "prov_step_1",
+          type: "api_call",
+          target: "invite_user",
+          provider: "slack",
+          description: "Invite user to Slack workspace",
+          parameters: {
+            workspace_id: "T0123456789",
+            channels: ["general", "announcements"],
+            user_type: "member",
+            is_restricted: false,
+          },
+        },
+      ],
+      approvalSteps: [
+        {
+          order: 1,
+          type: "approval",
+          approverType: "specific_users",
+          requiredApprovals: 2,
+        },
+      ],
+      revocationSteps: [
+        {
+          id: "rev_step_1",
+          type: "api_call",
+          target: "deactivate_user",
+          provider: "slack",
+          description: "Deactivate user from Slack workspace",
+          parameters: {
+            workspace_id: "T0123456789",
+            deactivate_type: "immediate",
+          },
+        },
+      ],
     },
   });
   console.log(`  Upserted policy: ${policy2.name} (${policy2.id})`);
@@ -571,9 +635,45 @@ async function main() {
       app: { connect: { id: "clq1234567895" } }, // Connect to Confluence app
       visibleToEveryone: true,
       accessDurationType: AccessDurationType.FIXED_CUSTOM,
-      accessDurationDays: 15, // Custom 15 days duration
+      accessDurationDays: 15,
       useAppOwnerAsReviewer: false,
-      approvalSteps: [{ type: "confluence_add_user", role: "viewer" }],
+      provisioningSteps: [
+        {
+          id: "prov_step_1",
+          type: "api_call",
+          target: "add_user",
+          provider: "confluence",
+          description: "Add user to Confluence site",
+          parameters: {
+            site_id: "your-confluence-site",
+            space_keys: ["TEAM", "DOCS"],
+            permission_level: "viewer",
+            notify_user: true,
+          },
+          rollbackAction: "remove_user",
+        },
+      ],
+      approvalSteps: [
+        {
+          order: 1,
+          type: "approval",
+          approverType: "any_admin",
+          requiredApprovals: 1,
+        },
+      ],
+      revocationSteps: [
+        {
+          id: "rev_step_1",
+          type: "api_call",
+          target: "remove_user",
+          provider: "confluence",
+          description: "Remove user from Confluence site",
+          parameters: {
+            site_id: "your-confluence-site",
+            remove_content: true,
+          },
+        },
+      ],
     },
   });
   console.log(`  Upserted policy: ${policy3.name} (${policy3.id})`);
@@ -590,7 +690,43 @@ async function main() {
       visibleToEveryone: false,
       accessDurationType: AccessDurationType.INDEFINITE,
       useAppOwnerAsReviewer: true,
-      approvalSteps: [{ type: "datadog_add_user", role: "viewer" }],
+      provisioningSteps: [
+        {
+          id: "prov_step_1",
+          type: "api_call",
+          target: "create_user",
+          provider: "datadog",
+          description: "Create Datadog user",
+          parameters: {
+            role_name: "Datadog Read Only",
+            access_level: "read",
+            service_accounts: ["monitoring", "logs"],
+            enable_mfa: true,
+          },
+          rollbackAction: "disable_user",
+        },
+      ],
+      approvalSteps: [
+        {
+          order: 1,
+          type: "approval",
+          approverType: "app_owner",
+          requiredApprovals: 1,
+        },
+      ],
+      revocationSteps: [
+        {
+          id: "rev_step_1",
+          type: "api_call",
+          target: "disable_user",
+          provider: "datadog",
+          description: "Disable Datadog user",
+          parameters: {
+            disable_type: "immediate",
+            revoke_sessions: true,
+          },
+        },
+      ],
     },
   });
   console.log(`  Upserted policy: ${policy4.name} (${policy4.id})`);
